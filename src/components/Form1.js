@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { scroller } from "react-scroll";
 import { Element } from "react-scroll";
+import { useForm } from "react-hook-form";
+import { postFormulario } from "../services/services";
+import Swal from "sweetalert2";
 
 const Form1 = () => {
+  const { register, handleSubmit, errors } = useForm();
+
   // valores iniciales del formulario
   const [form, setForm] = useState({
     nombre: "",
@@ -48,10 +53,44 @@ const Form1 = () => {
     offset: -10,
   };
 
+  // const handleSubmit = (e) => {
+  const onSubmit = (e) => {
+    // e.preventDefault();
+    postFormulario(form).then((respuesta) => {
+      console.log(respuesta);
+      if (respuesta.status === 201) {
+        setForm({
+          nombre: "",
+          apellido: "",
+          edad: 0,
+          genero: "",
+          codigo: 0,
+          reingreso: "",
+          fechaNacimiento: "",
+          celular: 0,
+          email: "",
+          ciclo: "",
+          carrera_id: "",
+          expLab: "",
+        });
+        Swal.fire({
+          icon: "success",
+          timer: 2500,
+          title: "Creado!",
+          text: "Registro creado correctamente",
+          showConfirmButton: false,
+        });
+        console.log("FORMULARIO CORRECTO");
+        return;
+      }
+    });
+  };
+
   return (
     <section className="row bg-light pb-4 mt-4">
       <div className="col-4">
-        <form>
+        {/* <form onSubmit={handleSubmit}> */}
+        <form onSubmit={handleSubmit(onSubmit)}>
           <h6 className="fa fa-header h4">
             Formulario de Inscripción para: Consultor Voluntario de Campo
           </h6>
@@ -63,7 +102,13 @@ const Form1 = () => {
               name="nombre"
               value={nombre}
               onChange={handleChange}
+              ref={register({ required: true })}
             />
+            {errors.nombre && (
+              <div className="alert alert-danger" role="alert">
+                Este campo es requerido
+              </div>
+            )}
           </div>
           <div className="form-group">
             <label htmlFor="">Apellidos</label>
@@ -73,7 +118,13 @@ const Form1 = () => {
               name="apellido"
               value={apellido}
               onChange={handleChange}
+              ref={register({ required: true, pattern: /^[A-Za-z]+$/i })}
             />
+            {errors.apellido && (
+              <div className="alert alert-danger" role="alert">
+                Este campo es requerido
+              </div>
+            )}
           </div>
           <div className="form-group">
             <label htmlFor="">Edad</label>
@@ -83,7 +134,13 @@ const Form1 = () => {
               name="edad"
               value={edad}
               onChange={handleChange}
+              ref={register({ required: true, min: 16, max: 50 })}
             />
+            {errors.edad && (
+              <div className="alert alert-danger" role="alert">
+                Este campo es requerido
+              </div>
+            )}
           </div>
           <div className="form-group">
             <label htmlFor="">Género</label>
@@ -92,11 +149,17 @@ const Form1 = () => {
               name="genero"
               value={genero}
               onChange={handleChange}
+              ref={register({ required: true })}
             >
               <option value="">Seleccione Género</option>
               <option value="01">Masculino</option>
               <option value="02">Femenino</option>
             </select>
+            {errors.genero && (
+              <div className="alert alert-danger" role="alert">
+                Este campo es requerido
+              </div>
+            )}
           </div>
           <div className="form-group">
             <label htmlFor="">Código Universitario</label>
@@ -106,7 +169,13 @@ const Form1 = () => {
               name="codigo"
               value={codigo}
               onChange={handleChange}
+              ref={register({ required: true, maxLength: 8, minLength: 8 })}
             />
+            {errors.codigo && errors.codigo.type === "minLength" && (
+              <div className="alert alert-danger" role="alert">
+                Este campo requiere 8 dígitos
+              </div>
+            )}
           </div>
           <div className="form-group">
             <label htmlFor="">¿Has estado en CEDICE antes?</label>
@@ -115,11 +184,17 @@ const Form1 = () => {
               name="reingreso"
               value={reingreso}
               onChange={handleChange}
+              ref={register({ required: true })}
             >
               <option value="">Seleccione</option>
               <option value="01">Sí</option>
               <option value="02">No</option>
             </select>
+            {errors.reingreso && (
+              <div className="alert alert-danger" role="alert">
+                Este campo es requerido
+              </div>
+            )}
           </div>
           <div className="form-group">
             <button
@@ -144,7 +219,13 @@ const Form1 = () => {
                 name="fechaNacimiento"
                 value={fechaNacimiento}
                 onChange={handleChange}
+                ref={register({ required: true })}
               />
+              {errors.fechaNacimiento && (
+                <div className="alert alert-danger" role="alert">
+                  Este campo es requerido
+                </div>
+              )}
             </div>
             <div className="form-group">
               <label htmlFor="">Celular</label>
@@ -154,7 +235,13 @@ const Form1 = () => {
                 name="celular"
                 value={celular}
                 onChange={handleChange}
+                ref={register({ required: true, minLength: 9, maxLength: 9 })}
               />
+              {errors.celular && errors.celular.type === "minLength" && (
+                <div className="alert alert-danger" role="alert">
+                  Este campo requiere 9 dígitos
+                </div>
+              )}
             </div>
             <div className="form-group">
               <label htmlFor="">Correo electrónico</label>
@@ -164,7 +251,13 @@ const Form1 = () => {
                 name="email"
                 value={email}
                 onChange={handleChange}
+                ref={register({ required: true })}
               />
+              {errors.email && (
+                <div className="alert alert-danger" role="alert">
+                  Este campo es requerido
+                </div>
+              )}
             </div>
             <div className="form-group">
               <label htmlFor="">Carrera</label>
@@ -173,9 +266,9 @@ const Form1 = () => {
                 name="carrera_id"
                 value={carrera_id}
                 onChange={handleChange}
+                ref={register({ required: true })}
               >
                 <option value="">Elegir carrera</option>
-                <option value="0">Elegir carrera</option>
                 <option value="1">Administración</option>
                 <option value="2">Contabilidad</option>
                 <option value="3">Economía</option>
@@ -189,6 +282,11 @@ const Form1 = () => {
                 <option value="11">Ingeniería de Sistemas</option>
                 <option value="12">Psicología</option>
               </select>
+              {errors.carrera_id && (
+                <div className="alert alert-danger" role="alert">
+                  Este campo es requerido
+                </div>
+              )}
             </div>
             <div className="form-group">
               <label htmlFor="">¿Qué ciclo estás cursando actualmente?</label>
@@ -197,6 +295,7 @@ const Form1 = () => {
                 name="ciclo"
                 value={ciclo}
                 onChange={handleChange}
+                ref={register({ required: true })}
               >
                 <option value="">Elegir ciclo</option>
                 <option value="1">6</option>
@@ -211,6 +310,11 @@ const Form1 = () => {
                 <option value="10">Titulado(a)</option>
                 <option value="11">Maestría</option>
               </select>
+              {errors.ciclo && (
+                <div className="alert alert-danger" role="alert">
+                  Este campo es requerido
+                </div>
+              )}
             </div>
             <div className="form-group">
               <label htmlFor="">
@@ -221,22 +325,25 @@ const Form1 = () => {
                 name="expLab"
                 value={expLab}
                 onChange={handleChange}
+                ref={register({ required: true })}
               >
                 <option value="">Seleccione</option>
                 <option value="01">Sí</option>
                 <option value="02">No</option>
               </select>
+              {errors.expLab && (
+                <div className="alert alert-danger" role="alert">
+                  Este campo es requerido
+                </div>
+              )}
             </div>
             <div className="form-group">
-              <button className="btn btn-primary " type="button">
-                Siguiente
+              <button className="btn btn-primary " type="submit">
+                Enviar Formulario
               </button>
             </div>
           </Element>
         </form>
-      </div>
-      <div className="col-5">
-        <img src="./portada.jpg" alt="" />
       </div>
     </section>
   );

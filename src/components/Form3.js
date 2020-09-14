@@ -11,8 +11,9 @@ const Form3 = () => {
     nomOrg: "",
     infoOrg: "",
     posLab: "",
+    campoLabUno_id: "",
+    campoLabDos_id: "",
     campoFunciones: "",
-    campoLab_id: "",
   });
 
   const {
@@ -20,7 +21,8 @@ const Form3 = () => {
     nomOrg,
     infoOrg,
     posLab,
-    campoLab_id,
+    campoLabUno_id,
+    campoLabDos_id,
     campoFunciones,
   } = form3;
 
@@ -100,13 +102,13 @@ const Form3 = () => {
             <select
               className="form-control"
               name="campoLabUno_id"
-              value={campoLab_id}
+              value={campoLabUno_id}
               onChange={handleChange}
             >
               <option value="">Elegir</option>
-              {campoLabUno.map(({ campoLab_id, campoLaboral }) => {
+              {campoLabUno.map(({ campoLabUno_id, campoLaboral }) => {
                 return (
-                  <option key={campoLab_id} value={campoLab_id}>
+                  <option key={campoLabUno_id} value={campoLabUno_id}>
                     {campoLaboral}
                   </option>
                 );
@@ -116,13 +118,13 @@ const Form3 = () => {
             <select
               className="form-control"
               name="campoLabDos_id"
-              value={campoLab_id}
+              value={campoLabDos_id}
               onChange={handleChange}
             >
               <option value="">Elegir</option>
-              {campoLabDos.map(({ campoLab_id, campoLaboral }) => {
+              {campoLabDos.map(({ campoLabDos_id, campoLaboral }) => {
                 return (
-                  <option key={campoLab_id} value={campoLab_id}>
+                  <option key={campoLabDos_id} value={campoLabDos_id}>
                     {campoLaboral}
                   </option>
                 );
