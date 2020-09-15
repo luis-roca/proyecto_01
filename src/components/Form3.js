@@ -4,8 +4,7 @@ import { useEffect } from "react";
 import { getCamposLaborales } from "../services/services";
 
 const Form3 = () => {
-  const [campoLabUno, setCampoLabUno] = useState([]);
-  const [campoLabDos, setCampoLabDos] = useState([]);
+  const [campoLab, setCampoLab] = useState([]);
   const [form3, setForm3] = useState({
     expVol: "",
     nomOrg: "",
@@ -14,6 +13,12 @@ const Form3 = () => {
     campoLabUno_id: "",
     campoLabDos_id: "",
     campoFunciones: "",
+    desProfUno_id: "",
+    desProfDos_id: "",
+    vocDesarrollo: "",
+    dispTardeNoche: "si",
+    dispSabado: "si",
+    dispCiclo: "si",
   });
 
   const {
@@ -24,12 +29,17 @@ const Form3 = () => {
     campoLabUno_id,
     campoLabDos_id,
     campoFunciones,
+    vocDesarrollo,
+    desProfUno_id,
+    desProfDos_id,
+    dispTardeNoche,
+    dispSabado,
+    dispCiclo,
   } = form3;
 
   useEffect(() => {
     getCamposLaborales().then((arregloCamposLaborales) => {
-      setCampoLabUno(arregloCamposLaborales);
-      setCampoLabDos(arregloCamposLaborales);
+      setCampoLab(arregloCamposLaborales.data);
     });
   }, []);
 
@@ -56,44 +66,38 @@ const Form3 = () => {
               <option value="01">Sí</option>
               <option value="02">No</option>
             </select>
-          </div>
-          <div className="form-group">
-            <label htmlFor="">
-              Nombre de la organizacion/ Voluntariado que estuviste
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              name="nomOrg"
-              value={nomOrg}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="">
-              Explícanos brevemente sobre la organización que estuviste y el rol
-              que desempeñaste
-            </label>
-            <textarea
-              className="form-control"
-              name="infoOrg"
-              value={infoOrg}
-              onChange={handleChange}
-            ></textarea>
-          </div>
-          <div className="form-group">
-            <label htmlFor="">¿Actualmente cuál es tu posición laboral?</label>
-            <select
-              className="form-control"
-              name="posLab"
-              value={posLab}
-              onChange={handleChange}
-            >
-              <option value="">Seleccione</option>
-              <option value="01">Practicante Pre Profesional</option>
-              <option value="02">Practicante Profesional</option>
-              <option value="03">Otra...</option>
-            </select>
+            {expVol === "01" && (
+              <div className="form-group">
+                <label htmlFor="">
+                  Nombre de la organizacion/ Voluntariado que estuviste
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="nomOrg"
+                  value={nomOrg}
+                  onChange={handleChange}
+                />
+              </div>
+            )}
+            {expVol === "01" && (
+              <div className="form-group">
+                <label htmlFor="">
+                  ¿Actualmente cuál es tu posición laboral?
+                </label>
+                <select
+                  className="form-control"
+                  name="posLab"
+                  value={posLab}
+                  onChange={handleChange}
+                >
+                  <option value="">Seleccione</option>
+                  <option value="01">Practicante Pre Profesional</option>
+                  <option value="02">Practicante Profesional</option>
+                  <option value="03">Otra...</option>
+                </select>
+              </div>
+            )}
           </div>
           <div className="form-group">
             <label htmlFor="">
@@ -106,10 +110,14 @@ const Form3 = () => {
               onChange={handleChange}
             >
               <option value="">Elegir</option>
-              {campoLabUno.map(({ campoLabUno_id, campoLaboral }) => {
+              {/* {campoLabUno.map(({ campoLabUno_id, campoLaboral }) => { */}
+              {campoLab.map((objCampoLab) => {
                 return (
-                  <option key={campoLabUno_id} value={campoLabUno_id}>
-                    {campoLaboral}
+                  <option
+                    key={objCampoLab.campoLab_id}
+                    value={objCampoLab.campoLab_id}
+                  >
+                    {objCampoLab.campoLaboral}
                   </option>
                 );
               })}
@@ -122,10 +130,13 @@ const Form3 = () => {
               onChange={handleChange}
             >
               <option value="">Elegir</option>
-              {campoLabDos.map(({ campoLabDos_id, campoLaboral }) => {
+              {campoLab.map((objCampoLab) => {
                 return (
-                  <option key={campoLabDos_id} value={campoLabDos_id}>
-                    {campoLaboral}
+                  <option
+                    key={objCampoLab.campoLab_id}
+                    value={objCampoLab.campoLab_id}
+                  >
+                    {objCampoLab.campoLaboral}
                   </option>
                 );
               })}
@@ -149,96 +160,54 @@ const Form3 = () => {
               carrera profesional?
             </label>
             <small className="text-muted">Máximo 2 opciones</small>
-            <select className="custom-select" id="validationTooltip04" required>
-              <option value="0">Elegir</option>
-              <option value="1">Desarrollo y Nuevas Tecnologías</option>
-              <option value="2">Control de Riesgos</option>
-              <option value="3">Programación</option>
-              <option value="4">Científico de Datos (Data Scientist)</option>
-              <option value="5">Posicionamiento SEO</option>
-              <option value="6">Marketing Estratégico</option>
-              <option value="7">Marketing Digital</option>
-              <option value="8">Gestor de Contenido (Content Manager)</option>
-              <option value="9">
-                Gestor de Medios Sociales (Social Media Manager)
-              </option>
-              <option value="10">Diseño Gráfico</option>
-              <option value="11">Creador de Contenido</option>
-              <option value="12">
-                Gestor de Eventos y Relaciones Públicas
-              </option>
-              <option value="13">Comercialización o Ventas</option>
-              <option value="14">Finanzas Corporativas</option>
-              <option value="15">Inversiones</option>
-              <option value="16">Contraloría</option>
-              <option value="17">Tesorería</option>
-              <option value="18">Contabilidad Financiera</option>
-              <option value="19">Contabilidad Fiscal</option>
-              <option value="20">Legal Tributario</option>
-              <option value="21">Legal Laboral</option>
-              <option value="22">
-                Administrativa (Oficinista o Gerencial)
-              </option>
-              <option value="23">Reclutamiento y Selección</option>
-              <option value="24">Evaluación de Desempeño</option>
-              <option value="25">Clima y Cultura</option>
-              <option value="26">Compensaciones</option>
-              <option value="27">Logística</option>
-              <option value="28">Producción u Operaciones</option>
-              <option value="29">Procesos</option>
-              <option value="30">Proyectos</option>
-              <option value="31">Gestión de Calidad</option>
-              <option value="32">Sistemas</option>
-              <option value="33">Psicología Clínica</option>
-              <option value="34">Psicología Educativa</option>
-              <option value="35">Psicología Social</option>
-            </select>
-            <hr />
-            <select className="custom-select" id="validationTooltip04" required>
-              <option value="0" selected>
+            <select
+              className="custom-select"
+              id="validationTooltip04"
+              // required
+              name="desProfUno_id"
+              value={desProfUno_id}
+              onChange={handleChange}
+            >
+              <option value="">
+                {" "}
+                {/* Se borro eñl atributo selected  */}
                 Elegir
               </option>
-              <option value="1">Desarrollo y Nuevas Tecnologías</option>
-              <option value="2">Control de Riesgos</option>
-              <option value="3">Programación</option>
-              <option value="4">Científico de Datos (Data Scientist)</option>
-              <option value="5">Posicionamiento SEO</option>
-              <option value="6">Marketing Estratégico</option>
-              <option value="7">Marketing Digital</option>
-              <option value="8">Gestor de Contenido (Content Manager)</option>
-              <option value="9">
-                Gestor de Medios Sociales (Social Media Manager)
+              {campoLab.map((objCampoLab) => {
+                return (
+                  <option
+                    key={objCampoLab.campoLab_id}
+                    value={objCampoLab.campoLab_id}
+                  >
+                    {objCampoLab.campoLaboral}
+                  </option>
+                );
+              })}
+            </select>
+            <hr />
+            <select
+              className="custom-select"
+              id="validationTooltip04"
+              // required
+              name="desProfDos_id"
+              value={desProfDos_id}
+              onChange={handleChange}
+            >
+              <option value="">
+                {" "}
+                {/* Se borro eñl atributo selected  */}
+                Elegir
               </option>
-              <option value="10">Diseño Gráfico</option>
-              <option value="11">Creador de Contenido</option>
-              <option value="12">
-                Gestor de Eventos y Relaciones Públicas
-              </option>
-              <option value="13">Comercialización o Ventas</option>
-              <option value="14">Finanzas Corporativas</option>
-              <option value="15">Inversiones</option>
-              <option value="16">Contraloría</option>
-              <option value="17">Tesorería</option>
-              <option value="18">Contabilidad Financiera</option>
-              <option value="19">Contabilidad Fiscal</option>
-              <option value="20">Legal Tributario</option>
-              <option value="21">Legal Laboral</option>
-              <option value="22">
-                Administrativa (Oficinista o Gerencial)
-              </option>
-              <option value="23">Reclutamiento y Selección</option>
-              <option value="24">Evaluación de Desempeño</option>
-              <option value="25">Clima y Cultura</option>
-              <option value="26">Compensaciones</option>
-              <option value="27">Logística</option>
-              <option value="28">Producción u Operaciones</option>
-              <option value="29">Procesos</option>
-              <option value="30">Proyectos</option>
-              <option value="31">Gestión de Calidad</option>
-              <option value="32">Sistemas</option>
-              <option value="33">Psicología Clínica</option>
-              <option value="34">Psicología Educativa</option>
-              <option value="35">Psicología Social</option>
+              {campoLab.map((objCampoLab) => {
+                return (
+                  <option
+                    key={objCampoLab.campoLab_id}
+                    value={objCampoLab.campoLab_id}
+                  >
+                    {objCampoLab.campoLaboral}
+                  </option>
+                );
+              })}
             </select>
           </div>
           <div className="form-group">
@@ -250,6 +219,9 @@ const Form3 = () => {
               className="form-control"
               id="exampleFormControlTextarea1"
               rows="5"
+              name="vocDesarrollo"
+              value={vocDesarrollo}
+              onChange={handleChange}
             ></textarea>
           </div>
           <div className="form-group">
@@ -262,14 +234,13 @@ const Form3 = () => {
               <input
                 className="form-check-input"
                 type="radio"
-                name="disponibilidadTardeNoche"
-                id="inputDisponibilidadTardeNocheSi"
-                checked
+                name="dispTardeNoche"
+                id="dispTardeAfirmativo"
+                value="si"
+                checked={dispTardeNoche === "si"}
+                onChange={handleChange}
               />
-              <label
-                className="form-check-label"
-                htmlFor="inputDisponibilidadTardeNocheSi"
-              >
+              <label className="form-check-label" htmlFor="dispTardeAfirmativo">
                 Si
               </label>
             </div>
@@ -277,13 +248,12 @@ const Form3 = () => {
               <input
                 className="form-check-input"
                 type="radio"
-                name="disponibilidadTardeNoche"
-                id="inputDisponibilidadTardeNocheNo"
+                name="dispTardeNoche"
+                id="dispTardeNegativo"
+                value="no"
+                onChange={handleChange}
               />
-              <label
-                className="form-check-label"
-                htmlFor="inputDisponibilidadTardeNocheNo"
-              >
+              <label className="form-check-label" htmlFor="dispTardeNegativo">
                 No
               </label>
             </div>
@@ -298,13 +268,15 @@ const Form3 = () => {
               <input
                 className="form-check-input"
                 type="radio"
-                name="disponibilidadSabado"
-                id="inputDisponibilidadSabadoSi"
-                checked
+                name="dispSabado"
+                id="dispSabadoAfirmativo"
+                value="si"
+                checked={dispSabado === "si"}
+                onChange={handleChange}
               />
               <label
                 className="form-check-label"
-                htmlFor="inputDisponibilidadSabadoSi"
+                htmlFor="dispSabadoAfirmativo"
               >
                 Si
               </label>
@@ -313,13 +285,12 @@ const Form3 = () => {
               <input
                 className="form-check-input"
                 type="radio"
-                name="disponibilidadSabado"
-                id="inputDisponibilidadSabadoNo"
+                name="dispSabado"
+                id="dispSabadoNegativo"
+                value="no"
+                onChange={handleChange}
               />
-              <label
-                className="form-check-label"
-                htmlFor="inputDisponibilidadSabadoNo"
-              >
+              <label className="form-check-label" htmlFor="dispSabadoNegativo">
                 No
               </label>
             </div>
@@ -333,15 +304,13 @@ const Form3 = () => {
               <input
                 className="form-check-input"
                 type="radio"
-                name="disponibilidadCiclo"
-                id="inputDisponibilidadCicloSi"
-                value="option1"
-                checked
+                name="dispCiclo"
+                id="dispCicloAfirmativo"
+                value="si"
+                checked={dispCiclo === "si"}
+                onChange={handleChange}
               />
-              <label
-                className="form-check-label"
-                htmlFor="inputDisponibilidadCicloSi"
-              >
+              <label className="form-check-label" htmlFor="dispCicloAfirmativo">
                 Si
               </label>
             </div>
@@ -349,14 +318,12 @@ const Form3 = () => {
               <input
                 className="form-check-input"
                 type="radio"
-                name="disponibilidadCiclo"
-                id="inputDisponibilidadCicloNo"
-                value="option2"
+                name="dispCiclo"
+                id="dispCicloNegativo"
+                value="no"
+                onChange={handleChange}
               />
-              <label
-                className="form-check-label"
-                htmlFor="inputDisponibilidadCicloNo"
-              >
+              <label className="form-check-label" htmlFor="dispCicloNegativo">
                 No
               </label>
             </div>
